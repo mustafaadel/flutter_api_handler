@@ -16,7 +16,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    //BlocProvider.of<MyCubit>(context).getAllUsers(usersList);
+    BlocProvider.of<MyCubit>(context).getAllUsers(usersList);
     //BlocProvider.of<MyCubit>(context).getUserById(3962348);
     // BlocProvider.of<MyCubit>(context).createUser(Users(
     //   name: "Atom",
@@ -24,7 +24,7 @@ class _HomeScreenState extends State<HomeScreen> {
     //   gender: "male",
     //   status: "active",
     // ));
-    BlocProvider.of<MyCubit>(context).deleteUser(3962348);
+    //BlocProvider.of<MyCubit>(context).deleteUser(3962348);
   }
 
   @override
@@ -54,13 +54,18 @@ class _HomeScreenState extends State<HomeScreen> {
           // )
           BlocBuilder<MyCubit, MyState>(
             builder: (context, state) {
-              if (state is userDeleted) {            
-                      return SizedBox(
-                        height: 70,
-                        child: ListTile(
-                          title: Text(user.email!.toString()),
-                          subtitle: Text(user.email!),
-                        ),
+              if (state is GotAllUsers) {
+                usersList = state.usersList;            
+                      return ListView.builder(
+                        shrinkWrap: true,
+                        padding: EdgeInsets.all(10),
+                        itemCount: usersList.length,
+                        itemBuilder: (context, index) {
+                          return ListTile(
+                            title: Text(usersList[index].name!),
+                            subtitle: Text(usersList[index].email!),
+                          );
+                        },
                       );
               } else {
                 return const Center(child: CircularProgressIndicator());
